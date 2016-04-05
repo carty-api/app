@@ -3,5 +3,4 @@
 Github Repo for Carty the food truck locator
 - Android application using Java
 - iOS application using Swift 
-- Server in Parse
-- MongoDB as database
+- Database hosted by Parse (for now)
