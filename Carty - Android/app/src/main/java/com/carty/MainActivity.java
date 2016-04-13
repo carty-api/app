@@ -1,7 +1,14 @@
 package com.carty;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -10,6 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
@@ -18,24 +28,40 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     TextView welcome;
+    GoogleApiClient mClient = null;
+    Location mLocation;
+    int MY_PERMISSIONS_REQUEST_LOCATION = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.e("Main", "In main activity");
+        //Log.e("Main", "In main activity");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         welcome = (TextView) findViewById(R.id.welcome);
-        welcome.append("\n");
+        //welcome.append("\n");
         setSupportActionBar(toolbar);
+        if (mClient == null) {
+            mClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
         getLocations();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent addCart = new Intent(MainActivity.this, AddCartActivity.class);
+                addCart.putExtra("UserLocation", mLocation);
+                startActivity(addCart);
             }
         });
 
@@ -71,15 +97,14 @@ public class MainActivity extends AppCompatActivity {
                 if (e == null) {
                     for (ParseObject object : objects) {
                         String name = object.getString("Name");
-                        Log.e("Name: ", name);
+                        //Log.e("Name: ", name);
                         ParseGeoPoint point = object.getParseGeoPoint("Location");
-                        Log.e("Point: ", point.toString());
+                        //Log.e("Point: ", point.toString());
                         String type = object.getString("Type");
-                        Log.e("Type: ", type);
+                        //Log.e("Type: ", type);
                         addToText(name, point, type);
                     }
-                }
-                else {
+                } else {
                     Log.e("Parse error", e.getMessage());
                 }
             }
@@ -94,5 +119,57 @@ public class MainActivity extends AppCompatActivity {
         welcome.append("Type: " + type);
         welcome.append("\n");
         welcome.append("\n");
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_LOCATION);
+        } else {
+
+            getLoc();
+        }
+    }
+
+    private void getLoc() {
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mClient);
+        if (mLocation != null) {
+            Log.e("My Latitude", (String.valueOf(mLocation.getLatitude())));
+            Log.e("My Long", String.valueOf(mLocation.getLongitude()));
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    protected void onStart() {
+        mClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        mClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLoc();
+            }
+        }
     }
 }
