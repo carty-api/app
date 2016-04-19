@@ -35,7 +35,9 @@ public class AddCartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (userLoc == null) {
-                    Toast.makeText(AddCartActivity.this, "Please turn on your location services", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AddCartActivity.this, "Please turn on your location services", Toast.LENGTH_SHORT).show();
+                    //TODO: This is a default value right now, change this and make location finding more reliable
+                    Toast.makeText(AddCartActivity.this, "40.7296252,-73.9952967", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast currentLoc = Toast.makeText(getApplicationContext(), String.valueOf(userLoc.getLatitude()) + " , " + String.valueOf(userLoc.getLongitude()), Toast.LENGTH_SHORT);
@@ -58,9 +60,16 @@ public class AddCartActivity extends AppCompatActivity {
         String cartN = cartName.getText().toString();
         //String cartLoc = cartLocation.getText().toString();
         String cartT = cartType.getText().toString();
-
+        ParseGeoPoint point = new ParseGeoPoint();
         ParseObject carts = new ParseObject("AddedTrucks");
-        ParseGeoPoint point = new ParseGeoPoint(userLoc.getLatitude(), userLoc.getLongitude());
+        if (userLoc == null) {
+            point.setLatitude(40.7296252);
+            point.setLongitude(-73.9952967);
+        }
+        else {
+            point.setLatitude(userLoc.getLatitude());
+            point.setLongitude(userLoc.getLongitude());
+        }
         carts.put("User_name", userName);
         carts.put("Cart_name", cartN);
         carts.put("Location", point);
