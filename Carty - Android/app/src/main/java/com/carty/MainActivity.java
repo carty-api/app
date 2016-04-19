@@ -1,6 +1,7 @@
 package com.carty;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -10,42 +11,38 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    TextView welcome;
     GoogleApiClient mClient = null;
     Location mLocation;
+    CardView halalCard;
+    CardView coffeeCard;
+    CardView otherCard;
     int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Log.e("Main", "In main activity");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        welcome = (TextView) findViewById(R.id.welcome);
-        //welcome.append("\n");
         setSupportActionBar(toolbar);
+        halalCard = (CardView) findViewById(R.id.halalCV);
+        coffeeCard = (CardView) findViewById(R.id.coffeeCV);
+        otherCard = (CardView) findViewById(R.id.otherCV);
         if (mClient == null) {
             mClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -53,18 +50,8 @@ public class MainActivity extends AppCompatActivity
                     .addApi(LocationServices.API)
                     .build();
         }
-        getLocations();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent addCart = new Intent(MainActivity.this, AddCartActivity.class);
-                addCart.putExtra("UserLocation", mLocation);
-                startActivity(addCart);
-            }
-        });
-
+        //getLocations();
+        setListeners();
     }
 
     @Override
@@ -89,37 +76,37 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void getLocations() {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Foodtrucks");
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null) {
-                    for (ParseObject object : objects) {
-                        String name = object.getString("Name");
-                        //Log.e("Name: ", name);
-                        ParseGeoPoint point = object.getParseGeoPoint("Location");
-                        //Log.e("Point: ", point.toString());
-                        String type = object.getString("Type");
-                        //Log.e("Type: ", type);
-                        addToText(name, point, type);
-                    }
-                } else {
-                    Log.e("Parse error", e.getMessage());
-                }
-            }
-        });
-    }
+//    private void getLocations() {
+//        ParseQuery<ParseObject> query = ParseQuery.getQuery("Foodtrucks");
+//        query.findInBackground(new FindCallback<ParseObject>() {
+//            @Override
+//            public void done(List<ParseObject> objects, ParseException e) {
+//                if (e == null) {
+//                    for (ParseObject object : objects) {
+//                        String name = object.getString("Name");
+//                        //Log.e("Name: ", name);
+//                        ParseGeoPoint point = object.getParseGeoPoint("Location");
+//                        //Log.e("Point: ", point.toString());
+//                        String type = object.getString("Type");
+//                        //Log.e("Type: ", type);
+//                        addToText(name, point, type);
+//                    }
+//                } else {
+//                    Log.e("Parse error", e.getMessage());
+//                }
+//            }
+//        });
+//    }
 
-    private void addToText(String name, ParseGeoPoint point, String type) {
-        welcome.append("Name: " + name);
-        welcome.append("\n");
-        welcome.append(point.toString());
-        welcome.append("\n");
-        welcome.append("Type: " + type);
-        welcome.append("\n");
-        welcome.append("\n");
-    }
+//    private void addToText(String name, ParseGeoPoint point, String type) {
+//        welcome.append("Name: " + name);
+//        welcome.append("\n");
+//        welcome.append(point.toString());
+//        welcome.append("\n");
+//        welcome.append("Type: " + type);
+//        welcome.append("\n");
+//        welcome.append("\n");
+//    }
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -171,5 +158,48 @@ public class MainActivity extends AppCompatActivity
                 getLoc();
             }
         }
+    }
+
+    private void setListeners() {
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addCart = new Intent(MainActivity.this, AddCartActivity.class);
+                addCart.putExtra("UserLocation", mLocation);
+                startActivity(addCart);
+            }
+        });
+
+        halalCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast submitted = Toast.makeText(getApplicationContext(), "Halal Toast", Toast.LENGTH_SHORT);
+                submitted.show();
+                startActivity(new Intent(MainActivity.this, ListActivity.class));
+            }
+        });
+
+
+        coffeeCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast submitted = Toast.makeText(getApplicationContext(), "Coffee Toast", Toast.LENGTH_SHORT);
+                submitted.show();
+                startActivity(new Intent(MainActivity.this, ListActivity.class));
+
+            }
+        });
+
+        otherCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast submitted = Toast.makeText(getApplicationContext(), "Other Toast", Toast.LENGTH_SHORT);
+                submitted.show();
+                startActivity(new Intent(MainActivity.this, ListActivity.class));
+
+            }
+        });
     }
 }

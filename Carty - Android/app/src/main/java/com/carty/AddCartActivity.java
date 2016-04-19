@@ -18,7 +18,6 @@ public class AddCartActivity extends AppCompatActivity {
 
     EditText yourName;
     EditText cartName;
-    EditText cartLocation;
     EditText cartType;
     //Button getLocationButton;
     Location userLoc;
@@ -31,12 +30,19 @@ public class AddCartActivity extends AppCompatActivity {
         userLoc = i.getParcelableExtra("UserLocation");
         yourName = (EditText) findViewById(R.id.yourNameET);
         cartName = (EditText) findViewById(R.id.cartNameET);
-        cartLocation = (EditText) findViewById(R.id.cartLocationET);
         cartType = (EditText) findViewById(R.id.cartTypeET);
         findViewById(R.id.getLocationButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cartLocation.setText(String.valueOf(userLoc.getLatitude()) + " , " + String.valueOf(userLoc.getLongitude()));
+                if (userLoc == null) {
+                    Toast.makeText(AddCartActivity.this, "Please turn on your location services", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast currentLoc = Toast.makeText(getApplicationContext(), String.valueOf(userLoc.getLatitude()) + " , " + String.valueOf(userLoc.getLongitude()), Toast.LENGTH_SHORT);
+                    currentLoc.show();
+                }
+
+
             }
         });
         findViewById(R.id.submitButton).setOnClickListener(new View.OnClickListener() {
