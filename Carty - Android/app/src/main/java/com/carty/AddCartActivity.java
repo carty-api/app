@@ -22,6 +22,7 @@ public class AddCartActivity extends AppCompatActivity {
     //Button getLocationButton;
     Location userLoc;
 
+    // check if location services are turned on, else prompt the user to do so
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +54,7 @@ public class AddCartActivity extends AppCompatActivity {
         });
     }
 
+    // get details from user and send a parse request to store the data
     private void submit() {
         String userName = yourName.getText().toString();
         String cartN = cartName.getText().toString();
