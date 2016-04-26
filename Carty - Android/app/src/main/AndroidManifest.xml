@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".ParseApplication">
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDm_PjBnvc4bHgV2LZqJKL4XRwH7B_cGbA"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -28,6 +31,8 @@
             android:label="Add Cart"/>
         <activity android:name=".ListActivity"
             android:label="Cart List"/>
+        <activity android:name=".TabActivity"
+                  android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

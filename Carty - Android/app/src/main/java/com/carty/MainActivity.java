@@ -1,7 +1,6 @@
 package com.carty;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -187,7 +186,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 Toast submitted = Toast.makeText(getApplicationContext(), "Coffee Toast", Toast.LENGTH_SHORT);
                 submitted.show();
-                startActivity(new Intent(MainActivity.this, ListActivity.class));
+                startActivity(new Intent(MainActivity.this, TabActivity.class));
 
             }
         });
