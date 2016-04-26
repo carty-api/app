@@ -41,7 +41,8 @@ public class ListFragment extends Fragment {
 
         return view;
     }
-
+    
+    // initialize data for food trucks
     private void initializeData() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Foodtrucks");
         query.findInBackground(new FindCallback<ParseObject>() {
