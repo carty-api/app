@@ -30,7 +30,9 @@ public class MainActivity extends AppCompatActivity
     Location mLocation;
     CardView halalCard;
     CardView coffeeCard;
-    CardView otherCard;
+    CardView dessertCard;
+    CardView koreanCard;
+    CardView seafoodCard;
     int MY_PERMISSIONS_REQUEST_LOCATION = 1;
 
     @Override
@@ -41,7 +43,9 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         halalCard = (CardView) findViewById(R.id.halalCV);
         coffeeCard = (CardView) findViewById(R.id.coffeeCV);
-        otherCard = (CardView) findViewById(R.id.otherCV);
+        dessertCard = (CardView) findViewById(R.id.dessertCV);
+        koreanCard = (CardView) findViewById(R.id.koreanCV);
+        seafoodCard = (CardView) findViewById(R.id.seafoodCV);
         if (mClient == null) {
             mClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
@@ -74,38 +78,6 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
-//    private void getLocations() {
-//        ParseQuery<ParseObject> query = ParseQuery.getQuery("Foodtrucks");
-//        query.findInBackground(new FindCallback<ParseObject>() {
-//            @Override
-//            public void done(List<ParseObject> objects, ParseException e) {
-//                if (e == null) {
-//                    for (ParseObject object : objects) {
-//                        String name = object.getString("Name");
-//                        //Log.e("Name: ", name);
-//                        ParseGeoPoint point = object.getParseGeoPoint("Location");
-//                        //Log.e("Point: ", point.toString());
-//                        String type = object.getString("Type");
-//                        //Log.e("Type: ", type);
-//                        addToText(name, point, type);
-//                    }
-//                } else {
-//                    Log.e("Parse error", e.getMessage());
-//                }
-//            }
-//        });
-//    }
-
-//    private void addToText(String name, ParseGeoPoint point, String type) {
-//        welcome.append("Name: " + name);
-//        welcome.append("\n");
-//        welcome.append(point.toString());
-//        welcome.append("\n");
-//        welcome.append("Type: " + type);
-//        welcome.append("\n");
-//        welcome.append("\n");
-//    }
 
     @Override
     public void onConnected(Bundle bundle) {
@@ -174,9 +146,9 @@ public class MainActivity extends AppCompatActivity
         halalCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast submitted = Toast.makeText(getApplicationContext(), "Halal Toast", Toast.LENGTH_SHORT);
-                submitted.show();
-                startActivity(new Intent(MainActivity.this, ListActivity.class));
+                Intent i = new Intent(MainActivity.this, TabActivity.class);
+                i.putExtra("FoodType", "Halal");
+                startActivity(i);
             }
         });
 
@@ -184,21 +156,40 @@ public class MainActivity extends AppCompatActivity
         coffeeCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast submitted = Toast.makeText(getApplicationContext(), "Coffee Toast", Toast.LENGTH_SHORT);
-                submitted.show();
-                startActivity(new Intent(MainActivity.this, TabActivity.class));
+                Intent i = new Intent(MainActivity.this, TabActivity.class);
+                i.putExtra("FoodType", "Coffee");
+                startActivity(i);
 
             }
         });
 
-        otherCard.setOnClickListener(new View.OnClickListener() {
+        dessertCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast submitted = Toast.makeText(getApplicationContext(), "Other Toast", Toast.LENGTH_SHORT);
-                submitted.show();
-                startActivity(new Intent(MainActivity.this, ListActivity.class));
+                Intent i = new Intent(MainActivity.this, TabActivity.class);
+                i.putExtra("FoodType", "Dessert");
+                startActivity(i);
 
             }
         });
+
+        koreanCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, TabActivity.class);
+                i.putExtra("FoodType", "Korean");
+                startActivity(i);
+            }
+        });
+
+        seafoodCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, TabActivity.class);
+                i.putExtra("FoodType", "Seafood");
+                startActivity(i);
+            }
+        });
+
     }
 }

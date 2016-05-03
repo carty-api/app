@@ -43,6 +43,7 @@ public class MapFragment extends Fragment
     private Location mLocation;
     int MY_PERMISSIONS_REQUEST_LOCATION = 1;
     GoogleApiClient mClient = null;
+    String foodType;
 
 
     public MapFragment(){
@@ -68,6 +69,7 @@ public class MapFragment extends Fragment
         View v = inflater.inflate(R.layout.fragment_map_view, container,
                 false);
         pixelPadding = getArguments().getInt("Pixels");
+        foodType = getArguments().getString("FoodType");
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
         googleMap = mMapView.getMap();
@@ -81,7 +83,7 @@ public class MapFragment extends Fragment
         }
 
         googleMap = mMapView.getMap();
-        Log.i("FragmentHeight", Integer.toString(pixelPadding));
+        //Log.i("FragmentHeight", Integer.toString(pixelPadding));
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(getActivity(),
@@ -96,7 +98,7 @@ public class MapFragment extends Fragment
 
             }
             else {
-                LatLng brooklyn = new LatLng(40.694190, -73.986962);
+                LatLng brooklyn = new LatLng(40.6944462,-73.9877854);
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(brooklyn, 14));
             }
         }
@@ -104,6 +106,8 @@ public class MapFragment extends Fragment
         //}
         googleMap.setPadding(0, 0, 0, pixelPadding);
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Foodtrucks");
+        query.whereEqualTo("Type", foodType);
+        query.whereEqualTo("AddToTotal", true);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
@@ -131,7 +135,7 @@ public class MapFragment extends Fragment
                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cur, 14));
                     return true;
                 } else {
-                    Toast.makeText(getContext(), "Your location could not be determined", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), "Your location could not be determined", Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }

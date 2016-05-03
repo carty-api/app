@@ -1,5 +1,6 @@
 package com.carty;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -21,6 +22,7 @@ public class TabActivity extends AppCompatActivity {
 
     ViewPager viewPager;
     TabLayout tabLayout;
+    String foodType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +32,10 @@ public class TabActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Intent foodIntent = getIntent();
+        foodType = foodIntent.getStringExtra("FoodType");
+        setTitle(foodType + " Sites");
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         setUpViewPager();
@@ -48,6 +53,7 @@ public class TabActivity extends AppCompatActivity {
 
         MapFragment mapFragment = new MapFragment();
         Bundle bundle = new Bundle();
+        bundle.putString("FoodType", foodType);
         bundle.putInt("Pixels", actionBarHeight);
         mapFragment.setArguments(bundle);
 

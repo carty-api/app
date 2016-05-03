@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +28,13 @@ public class ListFragment extends Fragment {
     private ArrayList<Truck> trucks = new ArrayList<>();
     private RecyclerView rv;
     private TruckListAdapter adapter;
+    String foodType;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        foodType = getArguments().getString("FoodType");
         initializeData();
         View view = inflater.inflate(R.layout.activity_list, container, false);
         rv = (RecyclerView)view.findViewById(R.id.rv);
@@ -45,12 +48,15 @@ public class ListFragment extends Fragment {
     // initialize data for food trucks
     private void initializeData() {
         ParseQuery<ParseObject> query = ParseQuery.getQuery("Foodtrucks");
+        query.whereEqualTo("Type", foodType);
+        query.whereEqualTo("AddToTotal", true);
         query.findInBackground(new FindCallback<ParseObject>() {
             @Override
             public void done(List<ParseObject> objects, ParseException e) {
                 if (e == null) {
                     for (ParseObject object : objects) {
                         String name = object.getString("Name");
+                        Log.e("LIST NAME: ", name);
                         ParseGeoPoint point = object.getParseGeoPoint("Location");
                         String type = object.getString("Type");
                         addToList(name, point, type);
