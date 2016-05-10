@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity
     CardView koreanCard;
     CardView seafoodCard;
     int MY_PERMISSIONS_REQUEST_LOCATION = 1;
+    int MY_PERMISSION_REQUEST_READ_STORAGE = 1;
+    int MY_PERMISSION_REQUEST_WRITE_STORAGE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,19 @@ public class MainActivity extends AppCompatActivity
                     .addApi(LocationServices.API)
                     .build();
         }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    MY_PERMISSION_REQUEST_READ_STORAGE);
+        }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSION_REQUEST_WRITE_STORAGE);
+        }
+
         //getLocations();
         setListeners();
     }
@@ -127,6 +142,16 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == MY_PERMISSIONS_REQUEST_LOCATION) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLoc();
+            }
+        }
+        if (requestCode == MY_PERMISSION_REQUEST_READ_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Woohoo got read storage access
+            }
+        }
+        if (requestCode == MY_PERMISSION_REQUEST_WRITE_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Woohoo got write storage
             }
         }
     }

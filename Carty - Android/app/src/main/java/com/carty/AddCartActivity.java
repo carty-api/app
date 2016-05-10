@@ -54,7 +54,8 @@ public class AddCartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (userLoc == null) {
-                    Toast.makeText(AddCartActivity.this, "Please enable your location services", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AddCartActivity.this, "Please enable your location services", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddCartActivity.this, "40.6944238,-73.9887725", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast currentLoc = Toast.makeText(getApplicationContext(), String.valueOf(userLoc.getLatitude()) + " , " + String.valueOf(userLoc.getLongitude()), Toast.LENGTH_SHORT);
@@ -178,14 +179,16 @@ public class AddCartActivity extends AppCompatActivity {
         ParseGeoPoint point = new ParseGeoPoint();
 
         if (userLoc == null) {
-            Toast.makeText(AddCartActivity.this, "Your location could not be determined", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(AddCartActivity.this, "Your location could not be determined", Toast.LENGTH_SHORT).show();
+            point.setLatitude(40.6944238);
+            point.setLongitude(-73.9887725);
         }
         else {
             point.setLatitude(userLoc.getLatitude());
             point.setLongitude(userLoc.getLongitude());
         }
         carts.put("User_name", userName);
-        carts.put("Cart_name", cartN);
+        carts.put("Name", cartN);
         carts.put("Location", point);
         carts.put("Type", cartT);
         carts.put("AddToTotal", false);
